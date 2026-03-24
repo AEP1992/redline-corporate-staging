@@ -53,18 +53,16 @@ const COST_MAP = {
 function getCost(type) { return COST_MAP[type] || 250; }
 const AVG_SET_COST = 2500;
 
-/* ─── Metric explanation component ─── */
-function MetricInfo({ title, children }) {
+/* ─── Tooltip info bubble ─── */
+function InfoTip({ text }) {
   return (
-    <div className="bg-navy/5 border border-navy/10 rounded-lg px-4 py-3 mb-4">
-      <div className="flex items-start gap-2">
-        <svg className="w-4 h-4 text-navy mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
-        <div>
-          {title && <span className="text-xs font-bold text-navy uppercase tracking-wider">{title}</span>}
-          <p className="text-xs text-gray-600 mt-0.5 leading-relaxed">{children}</p>
-        </div>
-      </div>
-    </div>
+    <span className="relative group inline-flex ml-1 cursor-help">
+      <svg className="w-3.5 h-3.5 text-gray-400 group-hover:text-navy transition-colors" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-64 px-3 py-2 bg-[#1a2a4a] text-white text-[11px] leading-relaxed rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 pointer-events-none">
+        {text}
+        <span className="absolute top-full left-1/2 -translate-x-1/2 -mt-1 border-4 border-transparent border-t-[#1a2a4a]"></span>
+      </span>
+    </span>
   );
 }
 
@@ -898,12 +896,7 @@ export default function Analytics() {
       </div>
 
       {/* ═══ SECTION 1: Fleet Health KPIs ═══ */}
-      <MetricInfo title="How these KPIs are calculated">
-        <strong>Fleet Health Score (0-100):</strong> Weighted formula — Pass Rate contributes 50%, Avg Gear Age contributes 30% (lower age = higher score, scaled where 0 yrs = 100 and 10 yrs = 0), and Compliance Rate contributes 20% (% of items not Out of Service). A score above 85 is strong, 70-85 needs attention, below 70 is critical.
-        {' '}<strong>Avg Gear Age:</strong> Mean age in years of all gear items with a valid manufacture date.
-        {' '}<strong>Replacements (12mo):</strong> Count of gear items whose manufacture date will pass the NFPA 1851 10-year mandatory retirement within the next 12 months.
-        {' '}<strong>12mo Budget Est.:</strong> Replacement count × average cost per item type (Jacket Shell $900, Pants Shell $700, Helmet $400, Boots $350, Hood $150, Gloves $100).
-      </MetricInfo>
+
       <div className="grid grid-cols-4 gap-4 mb-6">
         <div className="bg-white rounded-lg border border-surface-border p-5 relative overflow-hidden">
           <div className="absolute left-0 top-0 bottom-0 w-1 rounded-l-lg bg-gradient-to-b from-navy to-brand"></div>
@@ -913,22 +906,20 @@ export default function Analytics() {
             </div>
           </div>
           <div className={`text-3xl font-bold ${healthColor}`}>{fleetKpis.healthScore}</div>
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mt-1">Fleet Health Score</div>
+          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mt-1 flex items-center">Fleet Health Score<InfoTip text="Weighted score: 50% pass rate + 30% gear age (newer = higher) + 20% compliance (% not OOS). Above 85 = strong. 70-85 = needs attention. Below 70 = critical." /></div>
           <div className="mt-2 w-full bg-gray-200 rounded-full h-1.5">
             <div className={`h-full rounded-full bg-gradient-to-r ${healthBarColor}`} style={{ width: `${fleetKpis.healthScore}%` }}></div>
           </div>
         </div>
-        <KpiCard value={`${fleetKpis.avgAge} yr`} label="Avg Gear Age" color="blue" icon={<svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>} />
-        <KpiCard value={fleetKpis.projected12mo.toLocaleString()} label="Replacements (12mo)" color="orange" icon={<svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01M10.29 3.86l-8.4 14.55c-.55.95.14 2.14 1.23 2.14h16.76c1.09 0 1.78-1.19 1.23-2.14l-8.4-14.55a1.38 1.38 0 00-2.42 0z"/></svg>} />
-        <KpiCard value={`$${(fleetKpis.budgetEstimate / 1000).toFixed(0)}k`} label="12mo Budget Est." color="brand" icon={<svg className="w-5 h-5 text-brand" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>} />
+        <KpiCard value={`${fleetKpis.avgAge} yr`} label={<>Avg Gear Age<InfoTip text="Average age in years across all gear with a manufacture date. NFPA 1851 requires retirement at 10 years." /></>} color="blue" icon={<svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>} />
+        <KpiCard value={fleetKpis.projected12mo.toLocaleString()} label={<>Replacements (12mo)<InfoTip text="Gear items that will hit the NFPA 1851 10-year mandatory retirement deadline within the next 12 months. These must be budgeted for replacement." /></>} color="orange" icon={<svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01M10.29 3.86l-8.4 14.55c-.55.95.14 2.14 1.23 2.14h16.76c1.09 0 1.78-1.19 1.23-2.14l-8.4-14.55a1.38 1.38 0 00-2.42 0z"/></svg>} />
+        <KpiCard value={`$${(fleetKpis.budgetEstimate / 1000).toFixed(0)}k`} label={<>12mo Budget Est.<InfoTip text="Estimated cost to replace all gear hitting 10-year retirement in next 12 months. Based on: Jacket Shell $900, Pants Shell $700, Helmet $400, Boots $350, Hood $150, Gloves $100." /></>} color="brand" icon={<svg className="w-5 h-5 text-brand" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>} />
       </div>
 
       {/* ═══ SECTION 1b: Cross-Franchise Benchmarking ═══ */}
       <div className="mb-6">
         <SectionHeader icon={<svg className="w-3.5 h-3.5 text-indigo-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>} bgColor="bg-indigo-100" title="Cross-Franchise Benchmarking" subtitle="Comparing Florida vs Corporate vs Sarasota performance" />
-        <MetricInfo title="Reading this section">
-          <strong>Pass %:</strong> Percentage of gear items that passed inspection with no issues. <strong>Health Score:</strong> Same 0-100 composite score as above, calculated per franchise. <strong>BEST</strong> badge = highest health score. <strong>NEEDS WORK</strong> = lowest. A franchise with lower pass rate may have older gear fleet or more demanding inspection standards.
-        </MetricInfo>
+
         <div className="grid grid-cols-3 gap-4">
           {/* Chart */}
           <div className="bg-white rounded-lg border border-surface-border p-5">
@@ -1061,8 +1052,8 @@ export default function Analytics() {
                     <th className="text-center py-3 px-3 font-semibold text-gray-600 text-xs uppercase tracking-wider">Repair %</th>
                     <th className="text-center py-3 px-3 font-semibold text-gray-600 text-xs uppercase tracking-wider">OOS %</th>
                     <th className="text-center py-3 px-3 font-semibold text-gray-600 text-xs uppercase tracking-wider">Avg Age</th>
-                    <th className="text-center py-3 px-3 font-semibold text-gray-600 text-xs uppercase tracking-wider">Score</th>
-                    <th className="text-center py-3 px-3 font-semibold text-gray-600 text-xs uppercase tracking-wider">Rating</th>
+                    <th className="text-center py-3 px-3 font-semibold text-gray-600 text-xs uppercase tracking-wider"><span className="flex items-center justify-center">Score<InfoTip text="Reliability Score (0-100): Pass Rate × 0.6 + (100 − Repair%) × 0.2 + (100 − OOS%) × 0.2. Higher = more reliable. Only manufacturers with 10+ inspected items are scored." /></span></th>
+                    <th className="text-center py-3 px-3 font-semibold text-gray-600 text-xs uppercase tracking-wider"><span className="flex items-center justify-center">Rating<InfoTip text="RECOMMENDED (90+): Top tier, low failure. MONITOR (80-89): Acceptable, watch trends. CAUTION (70-79): Elevated failure rate, consider alternatives. AVOID (<70): High failure rate, not recommended for new purchases." /></span></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1157,7 +1148,7 @@ export default function Analytics() {
           {/* Age vs Failure chart with franchise overlays */}
           <div className="bg-white rounded-lg border border-surface-border p-5">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-700">The Failure Cliff — Per Franchise</h3>
+              <h3 className="text-sm font-semibold text-gray-700 flex items-center">The Failure Cliff — Per Franchise<InfoTip text="Shows how failure rates increase with gear age. Each line is a franchise. The steep rise after 7 years is why NFPA 1851 mandates 10-year retirement. Gear in the 7-10 year window should be prioritized for replacement budgeting." /></h3>
               <span className="text-[10px] px-2 py-0.5 bg-red-50 text-red-600 rounded-full font-semibold border border-red-100">⚠ CRITICAL INSIGHT</span>
             </div>
             <div style={{ height: 320 }}><canvas ref={ageFailCanvas}></canvas></div>
@@ -1170,7 +1161,7 @@ export default function Analytics() {
 
           {/* Replacement timeline stacked by franchise */}
           <div className="bg-white rounded-lg border border-surface-border p-5">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">5-Year Retirement Timeline — By Franchise</h3>
+            <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">5-Year Retirement Timeline — By Franchise<InfoTip text="Number of gear items hitting the 10-year NFPA retirement deadline each year, broken out by franchise. Dollar amounts below each year are the estimated replacement cost." /></h3>
             <div style={{ height: 320 }}><canvas ref={replTimelineCanvas}></canvas></div>
             <div className="mt-3 grid grid-cols-5 gap-2">
               {replacementTimeline.map(d => (
@@ -1192,14 +1183,14 @@ export default function Analytics() {
         <div className="grid grid-cols-5 gap-4">
           {/* Chart */}
           <div className="col-span-2 bg-white rounded-lg border border-surface-border p-5">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Top 15 Failure Modes</h3>
+            <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">Top 15 Failure Modes<InfoTip text="Most common reasons gear fails inspection, ranked by frequency across all franchises. Use this to identify systemic issues and target training or manufacturer conversations." /></h3>
             <div style={{ height: 440 }}><canvas ref={failModeCanvas}></canvas></div>
           </div>
 
           {/* Table with state/franchise columns */}
           <div className="col-span-3 bg-white rounded-lg border border-surface-border overflow-hidden">
             <div className="p-4 border-b border-gray-100">
-              <h3 className="text-sm font-semibold text-gray-700">Failure Mode Detail — with Regional Patterns</h3>
+              <h3 className="text-sm font-semibold text-gray-700 flex items-center">Failure Mode Detail — with Regional Patterns<InfoTip text="Each row shows a failure type, how often it occurs, which gear type it affects most, which manufacturer has it most, and which state sees it most. Use this to identify if a problem is manufacturer-specific, region-specific, or universal." /></h3>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -1235,7 +1226,7 @@ export default function Analytics() {
         {/* Failure mode × manufacturer cross-reference */}
         {failByMfr.length > 0 && (
           <div className="mt-4 bg-white rounded-lg border border-surface-border p-5">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Failure Modes by Manufacturer — Which manufacturers fail in which ways?</h3>
+            <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center">Failure Modes by Manufacturer<InfoTip text="Cross-references failure types with manufacturers. If one manufacturer dominates a specific failure mode, that's a product quality signal worth raising with the manufacturer or switching suppliers." /></h3>
             <div className="grid grid-cols-5 gap-3">
               {failByMfr.map((item, i) => (
                 <div key={i} className="p-3 bg-gray-50 rounded-lg border border-gray-100">
@@ -1360,7 +1351,7 @@ export default function Analytics() {
           {/* Replace now vs wait */}
           <div className="space-y-4">
             <div className="bg-white rounded-lg border border-surface-border p-5">
-              <h3 className="text-sm font-semibold text-gray-700 mb-4">Replace Now vs. Wait</h3>
+              <h3 className="text-sm font-semibold text-gray-700 mb-4 flex items-center">Replace Now vs. Wait<InfoTip text="'Overdue' = gear past 10-year NFPA limit, must be replaced immediately (liability risk). 'High Risk' = 7-10 year old gear already showing failure/OOS. Replacing proactively avoids emergency procurement and keeps firefighters safe." /></h3>
               <div className="space-y-4">
                 <div className="p-3 bg-red-50 rounded-lg border border-red-100">
                   <div className="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">Overdue (10+ years)</div>
