@@ -21,7 +21,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-4 gap-4 mb-6">
         <KpiCard value={totals.gear.toLocaleString()} label="Pieces Inspected" color="blue"
           icon={<svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>} />
-        <KpiCard value={totals.firefighters.toLocaleString()} label="Sets Inspected" color="green"
+        <KpiCard value={totals.firefighters.toLocaleString()} label="Personnel" color="green"
           icon={<svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>} />
         <KpiCard value={totals.repair.toLocaleString()} label="Repairs Completed" color="orange"
           icon={<svg className="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>} />
