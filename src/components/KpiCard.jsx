@@ -34,7 +34,7 @@ const colorIcons = {
 
 export default function KpiCard({ value, label, color = 'blue', icon }) {
   return (
-    <div className={`kpi-card kpi-${color}`} data-testid={`kpi-${label.toLowerCase().replace(/\s+/g, '-')}`}>
+    <div className={`kpi-card kpi-${color}`} data-testid={`kpi-${typeof label === 'string' ? label.toLowerCase().replace(/\s+/g, '-') : 'metric'}`}>
       <div className="flex items-center justify-between mb-3">
         <div className="w-9 h-9 rounded-lg bg-gray-50 flex items-center justify-center">
           {icon || colorIcons[color]}
