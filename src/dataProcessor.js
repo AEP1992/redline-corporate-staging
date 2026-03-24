@@ -96,7 +96,14 @@ function normalizeStatus(s) {
 }
 
 // Compute totals
-const totals = RAW_DATA.totals;
+const totals = RAW_DATA.totals || {
+  departments: departments.length,
+  firefighters: firefighters.length,
+  gear: allGear.length,
+  pass: allGear.filter(g => g.status === 'PASS').length,
+  repair: allGear.filter(g => g.status === 'REPAIR').length,
+  oos: allGear.filter(g => !['PASS','REPAIR'].includes(g.status)).length,
+};
 const passRate = totals.gear > 0 ? ((totals.pass / totals.gear) * 100).toFixed(1) : '0.0';
 
 // Gear type counts
