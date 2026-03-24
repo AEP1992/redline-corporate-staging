@@ -9,9 +9,9 @@ Chart.register(...registerables);
 /* ─── helpers ─── */
 const NOW = new Date();
 const CURRENT_YEAR = NOW.getFullYear();
-const FR_COLORS = { Florida: '#2563eb', Corporate: '#c41e24', Sarasota: '#059669' };
-const FR_COLORS_LIGHT = { Florida: 'rgba(37,99,235,0.12)', Corporate: 'rgba(196,30,36,0.12)', Sarasota: 'rgba(5,150,105,0.12)' };
-const FR_ORDER = ['Florida', 'Corporate', 'Sarasota'];
+const FR_COLORS = { Florida: '#2563eb', Corporate: '#c41e24', Sarasota: '#059669', 'New Jersey': '#7c3aed', 'South Texas': '#d97706', Colorado: '#0891b2' };
+const FR_COLORS_LIGHT = { Florida: 'rgba(37,99,235,0.12)', Corporate: 'rgba(196,30,36,0.12)', Sarasota: 'rgba(5,150,105,0.12)', 'New Jersey': 'rgba(124,58,237,0.12)', 'South Texas': 'rgba(217,119,6,0.12)', Colorado: 'rgba(8,145,178,0.12)' };
+const FR_ORDER = ['Florida', 'Corporate', 'Sarasota', 'New Jersey', 'South Texas', 'Colorado'];
 
 function parseAge(mfgDate) {
   if (!mfgDate) return null;
