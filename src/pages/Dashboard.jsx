@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import KpiCard from '../components/KpiCard';
 import Breadcrumb from '../components/Breadcrumb';
-import { totals, passRate, statusBreakdown, expiredCount, allGear } from '../dataProcessor';
+import { totals, passRate, statusBreakdown, expiredCount, allGear, departments, franchiseStats } from '../dataProcessor';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -13,9 +13,9 @@ export default function Dashboard() {
     <div>
       <Breadcrumb items={[{ label: 'Dashboard' }]} />
       <h1 className="text-2xl font-bold text-gray-900 mt-2">
-        Franchise Overview — Redline Corporate
+        Redline Corporate
       </h1>
-      <p className="text-gray-500 text-sm mb-6">{totals.departments} departments</p>
+      <p className="text-gray-500 text-sm mb-6">Cross-franchise fleet intelligence — {franchiseStats.length} franchises · {totals.departments} departments · {new Set(departments.map(d => d.state).filter(Boolean)).size} states</p>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-4 gap-4 mb-6">

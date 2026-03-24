@@ -28,6 +28,7 @@ RAW_DATA.departments.forEach((dept, dIdx) => {
     name: dept.name,
     city: dept.city || '',
     state: dept.state || '',
+    franchise: dept.franchise || '',
     status: 'Active',
     stats: dept.stats || computeDeptStats(dept),
     spare_count: dept.spare_count || 0
@@ -140,6 +141,24 @@ function isExpired(mfgDate) {
 
 const expiredCount = allGear.filter(g => isExpired(g.mfgDate)).length;
 
+// Franchise-level stats
+const franchiseMap = {};
+departments.forEach(d => {
+  const fr = d.franchise || 'Unknown';
+  if (!franchiseMap[fr]) franchiseMap[fr] = { name: fr, departments: 0, firefighters: 0, gear: 0, pass: 0, repair: 0, oos: 0 };
+  franchiseMap[fr].departments++;
+  const deptFF = firefighters.filter(f => f.departmentId === d.id);
+  franchiseMap[fr].firefighters += deptFF.length;
+  const deptGear = allGear.filter(g => g.departmentId === d.id);
+  franchiseMap[fr].gear += deptGear.length;
+  deptGear.forEach(g => {
+    if (g.status === 'PASS') franchiseMap[fr].pass++;
+    else if (g.status === 'REPAIR') franchiseMap[fr].repair++;
+    else franchiseMap[fr].oos++;
+  });
+});
+const franchiseStats = Object.values(franchiseMap);
+
 export {
   departments,
   firefighters,
@@ -152,7 +171,8 @@ export {
   statusBreakdown,
   expiredCount,
   isExpired,
-  categorizeGear
+  categorizeGear,
+  franchiseStats
 };
 
 // Per-department computed stats
