@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * { -webkit-font-smoothing: antialiased; }
+  body { @apply text-sm; }
+}
+
+@layer components {
+  .kpi-card {
+    @apply bg-white rounded-lg p-5 border border-surface-border relative overflow-hidden;
+  }
+  .kpi-card::before {
+    content: '';
+    @apply absolute left-0 top-0 bottom-0 w-1 rounded-l-lg;
+  }
+  .kpi-card.kpi-blue::before { @apply bg-blue-500; }
+  .kpi-card.kpi-green::before { @apply bg-status-pass; }
+  .kpi-card.kpi-red::before { @apply bg-status-fail; }
+  .kpi-card.kpi-orange::before { @apply bg-status-oos; }
+  .kpi-card.kpi-navy::before { @apply bg-navy; }
+  .kpi-card.kpi-brand::before { @apply bg-brand; }
+
+  .status-badge {
+    @apply px-2.5 py-0.5 rounded-full text-xs font-semibold inline-flex items-center;
+  }
+
+  .table-container {
+    @apply bg-white rounded-lg border border-surface-border overflow-hidden;
+  }
+
+  .sidebar-link {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors text-sm font-medium;
+  }
+  .sidebar-link.active {
+    @apply bg-navy text-white hover:bg-navy-light hover:text-white;
+  }
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
