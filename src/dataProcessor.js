@@ -14,8 +14,8 @@ RAW_DATA.departments.forEach((dept, dIdx) => {
   const deptObj = {
     id: deptId,
     name: dept.name,
-    city: extractCity(dept.name),
-    state: 'FL',
+    city: dept.city || '',
+    state: dept.state || '',
     status: 'Active',
     stats: dept.stats,
     spare_count: dept.spare_count
@@ -63,24 +63,7 @@ RAW_DATA.departments.forEach((dept, dIdx) => {
   });
 });
 
-function extractCity(deptName) {
-  const cities = {
-    'Boca Grande Fire Department': 'Boca Grande',
-    'Desoto County Fire Division': 'Arcadia',
-    'Englewood Fire Department': 'Englewood',
-    'Fayette County Dept of Fire and Emergency': 'Fayetteville',
-    'Gulfport Fire Rescue': 'Gulfport',
-    'Key Largo Fire Department': 'Key Largo',
-    'Pinellas Suncoast Fire and Rescue District': 'Indian Rocks Beach',
-    'Sarasota County Fire Department': 'Sarasota',
-    'Sarasota Manatee Airport Authority': 'Sarasota',
-    'St Pete Beach Fire Department': 'St Pete Beach',
-    'Tavares Fire Department': 'Tavares',
-    'Treasure Island Fire Rescue': 'Treasure Island',
-    'USCGC Thetis': 'Key West'
-  };
-  return cities[deptName] || '';
-}
+// City and state now come directly from the data JSON
 
 function categorizeGear(item) {
   const lower = item.toLowerCase();
