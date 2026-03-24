@@ -9,6 +9,18 @@ const allGear = [];
 let ffId = 1;
 let gearId = 1;
 
+function computeDeptStats(dept) {
+  let ff_count = dept.firefighters.length;
+  let gear_count = 0, pass = 0, repair = 0, oos = 0;
+  dept.firefighters.forEach(ff => {
+    gear_count += ff.stats.total;
+    pass += ff.stats.pass;
+    repair += ff.stats.repair;
+    oos += ff.stats.oos;
+  });
+  return { ff_count, gear_count, spare_count: 0, pass, repair, oos };
+}
+
 RAW_DATA.departments.forEach((dept, dIdx) => {
   const deptId = dIdx + 1;
   const deptObj = {
@@ -17,8 +29,8 @@ RAW_DATA.departments.forEach((dept, dIdx) => {
     city: dept.city || '',
     state: dept.state || '',
     status: 'Active',
-    stats: dept.stats,
-    spare_count: dept.spare_count
+    stats: dept.stats || computeDeptStats(dept),
+    spare_count: dept.spare_count || 0
   };
   departments.push(deptObj);
 
